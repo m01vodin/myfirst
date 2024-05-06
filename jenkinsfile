@@ -1,0 +1,29 @@
+pipeline{
+	agent any
+	stages{
+		stage('Checkout'){
+			steps{
+				git branch: 'main' , credentialsId: 'GithubCreds' , url: 'https://github.com/m01vodin/myfirst.git'
+				
+			}
+		}
+		stage('Build and Test'){
+			steps{
+				echo 'Build an test successful' 
+			}
+		}
+		stage('Generate Artifact'){
+			steps{
+				sh 'mkdir -p artifacts' 
+				sh 'cp index.html ./artifacts/'
+			}
+		}
+	}
+	post {
+		success{
+			archiveArtifacts artifacts  : 'artifacts/*.html', onlyIfSuccessful: true 
+			echo : 'Pipeline completed successfully' 
+		}
+	}
+}
+
